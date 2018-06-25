@@ -12,7 +12,10 @@ var cheerio = require("cheerio");
 
 
 //Require routes
-var routes = require("./routes");
+// var routes = require("./routes");
+
+var Note = require("./models/Note.js");
+var Article = require("./models/Article.js");
 
 // Require all models
 // var models = require("./models");
@@ -24,14 +27,13 @@ var PORT = 8080;
 var app = express();
 
 // Configure middleware
-app.use(routes);
+// app.use(routes);
 // Use morgan logger for logging requests
 app.use(logger("dev"));
 // Use body-parser for handling form submissions
 app.use(bodyParser.urlencoded({ extended: true }));
 // Use express.static to serve the public folder as a static directory
 app.use(express.static("public"));
-
 
 // Connect Handlebars to our Express app
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
