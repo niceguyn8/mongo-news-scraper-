@@ -1,60 +1,69 @@
-var express = require("express");
+//require dependencies
+var express = require('express')
 var bodyParser = require("body-parser");
-var logger = require("morgan");
 var mongoose = require("mongoose");
-var exphbs = require("express-handlebars");
+var logger = require("morgan");
 
-// Our scraping tools
-// Axios is a promised-based http library, similar to jQuery's Ajax method
-// It works on the client and on the server
-var axios = require("axios");
-var cheerio = require("cheerio");
-
-
-//Require routes
-// var routes = require("./routes");
-
+//require our Note and Article models
 var Note = require("./models/Note.js");
 var Article = require("./models/Article.js");
 
-// Require all models
-// var models = require("./models");
-// // var db = require("./models")
+var methodOverride = require("method-override");
 
-var PORT = 8080;
+// Set mongoose to leverage built in JavaScript ES6 Promises
+mongoose.Promise = Promise;
 
-// Initialize Express
-var app = express();
+//initialize express
+var app = express()
 
-// Configure middleware
-// app.use(routes);
-// Use morgan logger for logging requests
+// Set up an Express Router
+var router = express.Router();
+
+// Require our routes file pass our router object
+require("./routes/routes")(router);
+
+// Use morgan and body parser with our app
 app.use(logger("dev"));
-// Use body-parser for handling form submissions
-app.use(bodyParser.urlencoded({ extended: true }));
-// Use express.static to serve the public folder as a static directory
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+// Make public a static dir
 app.use(express.static("public"));
 
-// Connect Handlebars to our Express app
+// Have every request go through our router middleware
+app.use(router);
+
+// Database configuration with mongoose
+// mongoose.connect("mongodb://localhost/mongo-news-scraper");
+//define local mongoDB URI
+if(process.env.MONGODB_URI){
+	//THIS EXECUTES IF THIS IS IN HEROKU
+	mongoose.connect(process.env.MONGODB_URI);
+}else {
+	mongoose.connect("mongodb://localhost/mongo-news-scraper")
+}
+
+
+var db = mongoose.connection;
+
+// Set Handlebars.
+var exphbs = require("express-handlebars");
+
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-// Use bodyParser in our app
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// Override with POST having ?_method=DELETE
+app.use(methodOverride("_method"));
 
-
-// Connect to the Mongo DB
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-
-// Set mongoose to leverage built in JavaScript ES6 Promises
-// Connect to the Mongo DB
-mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI, {
-  useMongoClient: true
+// Once logged in to the db through mongoose, log a success message
+db.once("open", function() {
+  console.log("Mongoose connection successful.");
 });
 
-// Start the server
-app.listen(PORT, function() {
-  console.log("App running on port " + PORT + "!");
+
+
+// Listen on port 3000
+app.listen(process.env.PORT || 3000, function() {
+  console.log("App running on port 3000!");
 });
