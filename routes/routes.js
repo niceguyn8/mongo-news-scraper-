@@ -43,7 +43,7 @@ module.exports = function(router) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(html);
 
-    var tmp =[];
+    var tmp = [];
     // Now, we grab every h2 within an article tag, and do the following:
 
     $("article h2").each(function(i, element) {
