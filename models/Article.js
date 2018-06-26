@@ -19,12 +19,11 @@ var ArticleSchema = new Schema({
   //article summary is required and of type Sting
   summary: {
     type: String,
-    required: true
   },
 
   saved: {
     type: Boolean,
-    default: true
+    default: false
   },
   // `note` is an object that stores a Note id
   // The ref property links the ObjectId to the Note model

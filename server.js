@@ -9,6 +9,7 @@ var Note = require("./models/Note.js");
 var Article = require("./models/Article.js");
 
 var methodOverride = require("method-override");
+var db = ("../models")
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
 mongoose.Promise = Promise;
@@ -29,7 +30,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // Make public a static dir
-app.use(express.static("public"));
+app.use(express.static("assets"));
 
 // Have every request go through our router middleware
 app.use(router);

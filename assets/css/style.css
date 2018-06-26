@@ -5,7 +5,6 @@ html {
 
 body {
   margin-bottom: 80px;
-  background-image: url("../images/paper.png");
 }
 
 .footer {
@@ -44,7 +43,6 @@ body {
 
 .jumbotron .background-image {
   height: 40%;
-  background-image: url("../images/blabbermouth.jpg");
   background-size: cover;
 
 }
