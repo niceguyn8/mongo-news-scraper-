@@ -4,7 +4,6 @@ var request = require("request");
 var cheerio = require("cheerio");
 var methodOverride = require("method-override");
 // Override with POST having ?_method=DELETE
-// app.use(methodOverride("_method"));
 var Article = require('../models/Article')
 var Note = require('../models/Note')
 
@@ -22,7 +21,6 @@ module.exports = function(router) {
 			res.render("home", {article: doc} );
 		}
 		});
-		// res.render("home")
 	})
 
 	// This route renders the saved handledbars page
@@ -56,6 +54,9 @@ module.exports = function(router) {
       result.link = $(this)
         .children("a")
         .attr("href");
+      result.summary = $(this)
+        .children("<p>")
+        .text();
 
       // Using our Article model, create a new entry
       // This effectively passes the result object to the entry (and the title and link)
